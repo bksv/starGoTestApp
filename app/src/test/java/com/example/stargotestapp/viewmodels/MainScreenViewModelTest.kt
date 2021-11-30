@@ -2,16 +2,15 @@ package com.example.stargotestapp.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.example.stargotestapp.model.api.PeopleApi
+import com.example.stargotestapp.RxImmediateSchedulerRule
 import com.example.stargotestapp.model.entities.People
 import com.example.stargotestapp.model.repositories.PeopleRepository
 import dagger.hilt.android.testing.HiltAndroidTest
 import io.reactivex.Single
 import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.schedulers.Schedulers
-import org.junit.Assert.*
-import junit.framework.TestCase
 import org.junit.*
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.junit.runners.MethodSorters
 import org.mockito.Mock
@@ -23,18 +22,13 @@ import org.mockito.junit.MockitoJUnitRunner
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class MainScreenViewModelTest {
 
-    @Rule
-    @JvmField
-    val rule = InstantTaskExecutorRule()
-
-    @Mock
-    private lateinit var api: PeopleApi
+    @get:Rule
+    var rule: TestRule = InstantTaskExecutorRule()
 
     @Mock
     private lateinit var peopleRepository: PeopleRepository
 
     private lateinit var peopleObserver: Observer<People>
-
     private lateinit var errorObserver: Observer<Throwable>
 
     private lateinit var viewModel: MainScreenViewModel
@@ -43,14 +37,13 @@ class MainScreenViewModelTest {
     fun setUp(){
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
 
-        peopleRepository = PeopleRepository(api)
-
         viewModel = MainScreenViewModel(peopleRepository)
 
         peopleObserver = mock(Observer::class.java) as Observer<People>
-        viewModel.people.observeForever(peopleObserver)
+        viewModel._people.observeForever(peopleObserver)
+
         errorObserver = mock(Observer::class.java) as Observer<Throwable>
-        viewModel.error.observeForever(errorObserver)
+        viewModel._error.observeForever(errorObserver)
     }
 
     @Test
@@ -83,5 +76,10 @@ class MainScreenViewModelTest {
 
         // THEN
         verify(errorObserver).onChanged(fakeErrorResponse)
+    }
+
+    companion object {
+        @ClassRule @JvmField
+        val schedulers = RxImmediateSchedulerRule()
     }
 }

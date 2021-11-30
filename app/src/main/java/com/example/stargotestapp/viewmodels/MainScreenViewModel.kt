@@ -16,13 +16,13 @@ class MainScreenViewModel @Inject constructor(
     private val repository: PeopleRepository
 ): ViewModel() {
 
-    private val _people: MutableLiveData<People> = MutableLiveData()
+    internal val _people: MutableLiveData<People> = MutableLiveData()
     val people: LiveData<People> = _people
 
-    private val _error: MutableLiveData<Throwable> = MutableLiveData()
+    internal val _error: MutableLiveData<Throwable> = MutableLiveData()
     val error: LiveData<Throwable> = _error
 
-    internal fun getPeople(){
+    fun getPeople(){
         val disposable = repository.getPeople()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeOn(Schedulers.io())
@@ -31,9 +31,5 @@ class MainScreenViewModel @Inject constructor(
             }, {
                 _error.value = it
             })
-    }
-
-    init {
-        getPeople()
     }
 }

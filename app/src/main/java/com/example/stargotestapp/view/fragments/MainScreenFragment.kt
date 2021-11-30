@@ -31,6 +31,7 @@ class MainScreenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_main_screen, container, false)
+        viewModel.getPeople()
         return binding.root
     }
 
