@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -30,7 +31,7 @@ class MainScreenFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding =  DataBindingUtil.inflate(inflater, R.layout.fragment_main_screen, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main_screen, container, false)
         viewModel.getPeople()
         return binding.root
     }
@@ -40,12 +41,18 @@ class MainScreenFragment : Fragment() {
 
         binding.rvMainScreen.adapter = peopleAdapter
 
-        viewModel.people.observe(viewLifecycleOwner){
+        viewModel.people.observe(viewLifecycleOwner) {
             peopleAdapter.updateData(it)
         }
-        viewModel.error.observe(viewLifecycleOwner){
-            //(it as HttpException).code()
-            //it.localizedMessage
+        viewModel.error.observe(viewLifecycleOwner) {
+            AlertDialog.Builder(requireContext()).setMessage(R.string.ip_list_error)
+                .setPositiveButton(R.string.positive) { _, _ ->
+                    viewModel.getPeople()
+                }
+                .setNegativeButton(R.string.negative) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .show()
         }
     }
 

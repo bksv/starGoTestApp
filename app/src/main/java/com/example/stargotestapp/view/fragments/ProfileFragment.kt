@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.stargotestapp.R
 import com.example.stargotestapp.databinding.FragmentProfileBinding
@@ -45,7 +47,14 @@ class ProfileFragment : Fragment() {
             binding.tvCountry.text = it.person.country
         }
         viewModel.error.observe(viewLifecycleOwner) {
-
+            AlertDialog.Builder(requireContext()).setMessage(R.string.incorrect_id_or_data_absent)
+                .setPositiveButton(R.string.positive) { _, _ ->
+                    val action =
+                        ProfileFragmentDirections.actionProfileFragmentToMainScreenFragment()
+                    Navigation.findNavController(requireView()).navigate(action) }
+                .setNegativeButton(R.string.negative){dialog,_ ->
+                    dialog.dismiss() }
+                .show()
         }
     }
 

@@ -22,5 +22,8 @@
         <argument
             android:name="person_id_argument"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profileFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
     </fragment>
 </navigation>

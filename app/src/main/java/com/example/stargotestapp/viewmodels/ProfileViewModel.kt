@@ -15,10 +15,10 @@ class ProfileViewModel @Inject constructor(
     private val repository: PeopleRepository
 ): ViewModel(){
 
-    private val _person: MutableLiveData<PersonApiResponse> = MutableLiveData()
+    internal val _person: MutableLiveData<PersonApiResponse> = MutableLiveData()
     val person: LiveData<PersonApiResponse> = _person
 
-    private val _error: MutableLiveData<Throwable> = MutableLiveData()
+    internal val _error: MutableLiveData<Throwable> = MutableLiveData()
     val error: LiveData<Throwable> = _error
 
     fun getPerson(personId: String){
